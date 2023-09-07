@@ -1,6 +1,18 @@
 import { db } from "../database/database.js";
 
-export async function login(firstName, lastName) {
+async function postPassenger(firstName, lastName) {
     const res = db.query(`INSERT INTO passengers (firstName, lastName) VALUES ($1, $2);`, [firstName, lastName])
-    return res;
+    return res.rows;
 }
+
+async function getPassengerTravel() {
+    const res = db.query(`SELCT * FROM "passengersTravels";`);
+    return res.rows;
+}
+
+const passengersRepository = {
+    postPassenger,
+    getPassengerTravel
+}
+
+export default passengersRepository;
