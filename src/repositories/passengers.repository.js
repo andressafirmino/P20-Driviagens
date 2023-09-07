@@ -1,7 +1,7 @@
-import { db } from "../database/database.js";
+import { db } from "../database.connection.js";
 
 async function postPassenger(firstName, lastName) {
-    const res = db.query(`INSERT INTO passengers (firstName, lastName) VALUES ($1, $2);`, [firstName, lastName])
+    const res = db.query(`INSERT INTO passengers ("firstName", "lastName") VALUES ($1, $2);`, [firstName, lastName])
     return res.rows;
 }
 
