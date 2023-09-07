@@ -7,12 +7,19 @@ export async function postCity(req, res) {
         await travelsService.postCity(name);
         res.sendStatus(httpStatus.CREATED);
         } catch (e) {
-        
+        if(e.type === "conflict") return res.sendStatus(httpStatus.CONFLICT);
+        res.sendStatus(500);
     }
 }
 
 export async function postFlight(req, res) {
     const {origin, destination, date} = req.body;
+    try {
+        await travelsService.postFlight(origin, destination, date);
+        res.sendStatus(httpStatus.CREATED);
+        } catch (e) {
+        
+    }
 }
 
 export async function postTravel(req, res) {

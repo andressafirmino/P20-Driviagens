@@ -1,5 +1,10 @@
 import { db } from "../database.connection.js";
 
+async function checkCity(name) {
+    const res = await db.query(`SELECT * FROM cities WHERE name = $1;`, [name]);
+    return res.rows;
+}
+
 async function postCity(name) {
     const res = db.query(`INSERT INTO cities (name) VALUES ($1);`, [name]);
     return res.rows;
@@ -21,6 +26,7 @@ async function getFlights() {
 }
 
 const travelsRepository = {
+    checkCity,
     postCity,
     postFlight,
     postTravel,
