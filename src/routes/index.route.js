@@ -5,6 +5,6 @@ import travelsRouter from "./travels.route.js";
 const router = Router();
 
 router.use(passengersRouter);
-//router.use(travelsRouter);
+router.use(travelsRouter);
 
 export default router;

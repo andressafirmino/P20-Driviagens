@@ -1,4 +1,4 @@
-import { db } from "../database/database.js";
+import { db } from "../database.connection.js";
 
 async function postCity(name) {
     const res = db.query(`INSERT INTO cities (name) VALUES ($1);`, [name]);
