@@ -34,8 +34,8 @@ function dateFormat(date) {
     return formatDate;
 }
 
-async function getFlights() {
-    const flights = await travelsRepository.getFlights();
+async function getFlights(origin, destination, biggerDate, smallerDate) {
+    const flights = await travelsRepository.getFlights(origin, destination, biggerDate, smallerDate);
     
 
     const dateUpdate = flights.rows.map(flight => ({

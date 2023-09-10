@@ -25,6 +25,8 @@ export async function postTravel(req, res) {
 }
 
 export async function getFlights(req, res) {
-    const flights = await travelsService.getFlights();
+    const {origin, destination, "bigger-date": biggerDate, "smaller-date": smallerDate} = req.query;
+
+    const flights = await travelsService.getFlights(origin, destination, biggerDate, smallerDate);
     res.send(flights);
 }

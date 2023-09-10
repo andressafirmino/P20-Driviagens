@@ -49,8 +49,9 @@ async function postTravel(passengerId, flightId) {
     return res.rows;
 }
 
-async function getFlights() {
-    const res = db.query(`
+async function getFlights(origin, destination, biggerDate, smallerDate) {
+    const flights = [];
+    let query = `
     SELECT
     flights.id,
     city_origin.name AS origin,
@@ -58,8 +59,31 @@ async function getFlights() {
     flights.date
     FROM flights
     JOIN cities AS city_origin ON flights.origin = city_origin.id
-    JOIN cities AS city_destination ON flights.destination = city_destination.id
-    ORDER BY flights.date;`);
+    JOIN cities AS city_destination ON flights.destination = city_destination.id`;
+    const conditional = [];
+    if(typeof origin !== 'undefined' && origin !== '') {
+        flights.push(origin);
+        conditional.push(`city_origin.name = $${flights.length}`);
+    }
+    if(typeof destination !== 'undefined' && destination !== '') {
+        flights.push(destination);
+        conditional.push(`city_destination.name = $${flights.length}`);
+    }
+    /* if(typeof biggerDate !== 'undefined' && biggerDate !== '') {
+        flights.push(biggerDate);
+        conditional.push(`bigger-date = $${flights.length}`);
+    }
+    if(typeof smallerDate !== 'undefined' && smallerDate !== '') {
+        flights.push(smallerDate);
+        conditional.push(`smaller-date = $${flights.length}`);
+    } */
+    if (conditional.length > 0) {
+        query += ' WHERE ' + conditional.join(' AND ');
+    }
+    query += ' ORDER BY flights.date';
+    console.log(conditional)    
+    const res = await db.query(query, flights);
+    console.log(res)
     return res;
 }
 
