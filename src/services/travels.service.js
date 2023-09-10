@@ -3,12 +3,13 @@ import travelsRepository from "../repositories/travels.repository.js";
 import { conflictError } from "../errors/conflict.js";
 import { notFoundCitiesError } from "../errors/notFoundCity.js";
 import { notFoundError } from "../errors/notFound.js";
-
+import dayjs from "dayjs";
+import 'dayjs/locale/pt-br.js';
 
 async function postCity(name) {
     const city = await travelsRepository.checkCity(name);
     if (city.length !== 0) throw conflictError("Cidade");
-    await travelsRepository.postCity(name);  
+    await travelsRepository.postCity(name);
     return;
 }
 
@@ -28,11 +29,21 @@ async function postTravel(passengerId, flightId) {
     await travelsRepository.postTravel(passengerId, flightId);
     return;
 }
+function dateFormat(date) {
+    const formatDate = dayjs(date).locale('pt-br').format('DD-MM-YYYY');
+    return formatDate;
+}
 
 async function getFlights() {
-    const res = await travelsRepository.getFlights();
-    console.log(res.rows);
-    return res.rows;
+    const flights = await travelsRepository.getFlights();
+    
+
+    const dateUpdate = flights.rows.map(flight => ({
+        ...flight,
+        date: dateFormat(flight.date)
+    }))
+    console.log(dateUpdate);
+    return dateUpdate;
 }
 
 const travelsService = {
