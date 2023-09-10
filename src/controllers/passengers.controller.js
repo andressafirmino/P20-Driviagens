@@ -2,16 +2,12 @@ import httpStatus from "http-status";
 import passengersService from "../services/passengers.service.js";
 
 export async function postPassenger(req, res) {
-    const {firstName, lastName} = req.body;
-    
-    try {
-        await passengersService.postPassenger(firstName, lastName);
-        res.sendStatus(httpStatus.CREATED);
-    } catch (e) {
-        
-    }
+    const { firstName, lastName } = req.body;
+
+    await passengersService.postPassenger(firstName, lastName);
+    res.sendStatus(httpStatus.CREATED);
 }
 
-export async function getPassengerTravel (req, res) {
+export async function getPassengerTravel(req, res) {
 
 }
