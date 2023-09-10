@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 
 export default function errorHandler(error, req, res, next) {
-    //console.log(error);
+    console.log(error.message);
 
     if (error.type === "conflict") {
         return res.status(httpStatus.CONFLICT).send(error.message);
