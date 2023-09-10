@@ -25,5 +25,6 @@ export async function postTravel(req, res) {
 }
 
 export async function getFlights(req, res) {
-
+    const flights = await travelsService.getFlights();
+    res.send(flights);
 }

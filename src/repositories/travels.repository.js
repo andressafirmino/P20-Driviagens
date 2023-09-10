@@ -51,9 +51,16 @@ async function postTravel(passengerId, flightId) {
 
 async function getFlights() {
     const res = db.query(`
-    SELECT * FROM flights
-    ;`);
-    return res.rows;
+    SELECT
+    flights.id,
+    city_origin.name AS origin,
+    city_destination.name AS destination,
+    flights.date
+    FROM flights
+    JOIN cities AS city_origin ON flights.origin = city_origin.id
+    JOIN cities AS city_destination ON flights.destination = city_destination.id
+    ORDER BY flights.date;`);
+    return res;
 }
 
 const travelsRepository = {

@@ -4,6 +4,7 @@ import { conflictError } from "../errors/conflict.js";
 import { notFoundCitiesError } from "../errors/notFoundCity.js";
 import { notFoundError } from "../errors/notFound.js";
 
+
 async function postCity(name) {
     const city = await travelsRepository.checkCity(name);
     if (city.length !== 0) throw conflictError("Cidade");
@@ -28,10 +29,17 @@ async function postTravel(passengerId, flightId) {
     return;
 }
 
+async function getFlights() {
+    const res = await travelsRepository.getFlights();
+    console.log(res.rows);
+    return res.rows;
+}
+
 const travelsService = {
     postCity,
     postFlight,
-    postTravel
+    postTravel,
+    getFlights
 }
 
 export default travelsService;
