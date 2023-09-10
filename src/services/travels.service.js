@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import travelsRepository from "../repositories/travels.repository.js";
 import { conflictError } from "../errors/conflict.js";
 import { notFoundCitiesError } from "../errors/notFoundCity.js";
+import { notFoundError } from "../errors/notFound.js";
 
 async function postCity(name) {
     const city = await travelsRepository.checkCity(name);
@@ -18,9 +19,19 @@ async function postFlight(origin, destination, date) {
     return;
 }
 
+async function postTravel(passengerId, flightId) {
+    const passenger = await travelsRepository.checkPassenger(passengerId);
+    if (passenger.length === 0) throw notFoundError("Passageiro");
+    const flight = await travelsRepository.checkFlight(flightId);
+    if (flight.length === 0) throw notFoundError("Voo");
+    await travelsRepository.postTravel(passengerId, flightId);
+    return;
+}
+
 const travelsService = {
     postCity,
-    postFlight
+    postFlight,
+    postTravel
 }
 
 export default travelsService;

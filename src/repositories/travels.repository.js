@@ -28,6 +28,20 @@ async function postFlight(origin, destination, date) {
     return res;
 }
 
+async function checkPassenger (id) {
+    const res = await db.query(`
+    SELECT * FROM passengers WHERE id = $1
+    ;`, [id]);
+    return res.rows;
+}
+
+async function checkFlight (id) {
+    const res = await db.query(`
+    SELECT * FROM flights WHERE id = $1
+    ;`, [id]);
+    return res.rows;
+}
+
 async function postTravel(passengerId, flightId) {
     const res = db.query(`
     INSERT INTO travels ("passengerId", "flightId") VALUES ($1, $2)
@@ -47,6 +61,8 @@ const travelsRepository = {
     postCity,
     checkCities,
     postFlight,
+    checkPassenger,
+    checkFlight,
     postTravel,
     getFlights
 }

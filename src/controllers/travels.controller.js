@@ -19,6 +19,9 @@ export async function postFlight(req, res) {
 
 export async function postTravel(req, res) {
     const { passengerId, flightId } = req.body;
+
+    await travelsService.postTravel(passengerId, flightId);
+    res.sendStatus(httpStatus.CREATED);
 }
 
 export async function getFlights(req, res) {
