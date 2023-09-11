@@ -12,9 +12,9 @@ async function getPassengerTravel(name) {
     const passengerTravel = [];
     let query =`
     SELECT passengers."firstName" || ' ' || passengers."lastName" AS passenger,
-    COUNT (travels."passengerId") AS travels
-    FROM travels
-    JOIN passengers ON travels."passengerId" = passengers.id 
+    COALESCE(COUNT (travels."passengerId"),0) AS travels
+    FROM passengers
+    LEFT JOIN travels ON passengers.id = travels."passengerId" 
     `
     const conditional = [];
     if(typeof name !== 'undefined' && name !== '') {
