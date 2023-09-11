@@ -20,10 +20,11 @@ async function postCity(name) {
 
 async function postFlight(origin, destination, date) {
 
+    const formatDate = dayjs(date).format('YYYY-MM-DD');
     if (origin === destination) throw conflictCitiesError();
     const cities = await travelsRepository.checkCities(origin, destination);
     if (cities.count !== '2') throw notFoundCitiesError(cities.count);
-    await travelsRepository.postFlight(origin, destination, date);
+    await travelsRepository.postFlight(origin, destination, formatDate);
     return;
 }
 
