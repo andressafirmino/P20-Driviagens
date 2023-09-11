@@ -17,3 +17,6 @@ export const postTravelShema = joi.object({
 	passengerId: joi.number().positive().required(),
 	flightId: joi.number().positive().required()
 })
+
+export const dateSchema = JoiExtended.date().format("DD-MM-YYYY").messages({'date.format': 'A data deve está no formato: "DD-MM-YYYY"'})
+

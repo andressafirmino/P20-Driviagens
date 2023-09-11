@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { getFlights, postCity, postFlight, postTravel } from "../controllers/travels.controller.js";
-import { validateSchema } from "../middlewares/validateSchema.js";
+import { validadeQuerySchema, validateSchema } from "../middlewares/validateSchema.js";
 import { postCitySchema, postFlightShema, postTravelShema } from "../schemas/travels.schema.js";
 
 const travelsRouter = Router();

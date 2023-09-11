@@ -5,6 +5,11 @@ import { notFoundCitiesError } from "../errors/notFoundCity.js";
 import { notFoundError } from "../errors/notFound.js";
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br.js';
+import { conflictCitiesError } from "../errors/conflictCities.js";
+import { dateSchema } from "../schemas/travels.schema.js";
+import { dateFormatError } from "../errors/dateFormat.js";
+import { smallerError } from "../errors/smaller.js";
+import { badRequestError } from "../errors/badRequest.js";
 
 async function postCity(name) {
     const city = await travelsRepository.checkCity(name);
@@ -15,6 +20,7 @@ async function postCity(name) {
 
 async function postFlight(origin, destination, date) {
 
+    if (origin === destination) throw conflictCitiesError();
     const cities = await travelsRepository.checkCities(origin, destination);
     if (cities.count !== '2') throw notFoundCitiesError(cities.count);
     await travelsRepository.postFlight(origin, destination, date);
@@ -34,15 +40,20 @@ function dateFormat(date) {
     return formatDate;
 }
 
-async function getFlights(origin, destination, biggerDate, smallerDate) {
-    const flights = await travelsRepository.getFlights(origin, destination, biggerDate, smallerDate);
-    
+async function getFlights(origin, destination, smallerDate, biggerDate) {
+ const{error: smallerDateError} = dateSchema.validate(smallerDate);
+ const{error: biggerDateError} = dateSchema.validate(biggerDate);
+ 
+    if(smallerDateError || biggerDateError) throw dateFormatError();
+    if(smallerDate && !biggerDate || !smallerDate && biggerDate) throw badRequestError(smallerDate ? "data final" : "data inicial")
+    if(biggerDate < smallerDate) throw smallerError();
+
+    const flights = await travelsRepository.getFlights(origin, destination, smallerDate, biggerDate);    
 
     const dateUpdate = flights.rows.map(flight => ({
         ...flight,
         date: dateFormat(flight.date)
     }))
-    console.log(dateUpdate);
     return dateUpdate;
 }
 
