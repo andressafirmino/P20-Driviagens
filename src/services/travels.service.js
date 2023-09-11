@@ -19,11 +19,11 @@ async function postCity(name) {
     return;
 }
 
-function formatDateToYYYYMMDD(data) {
-    const parts = data.split('-');
+function formatDateToYYYYMMDD(date) {
+    const parts = date.split('-');
     if (parts.length === 3) {
-      const [dia, mes, ano] = parts;
-      return `${ano}-${mes}-${dia}`;
+      const [day, mounth, year] = parts;
+      return `${year}-${mounth}-${day}`;
     }
     return null; 
   }
@@ -31,7 +31,7 @@ function formatDateToYYYYMMDD(data) {
 async function postFlight(origin, destination, date) {
 
     console.log(date)
-    const formatDate = formatDateToYYYYMMDD(date)
+    const formatDate = formatDateToYYYYMMDD(date);
     console.log(formatDate)
     if (origin === destination) throw conflictCitiesError();
     const cities = await travelsRepository.checkCities(origin, destination);
