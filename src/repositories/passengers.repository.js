@@ -7,11 +7,27 @@ async function postPassenger(firstName, lastName) {
     return res;
 }
 
-async function getPassengerTravel() {
-    const res = db.query(`
-    SELCT * FROM "passengersTravels"
-    ;`);
-    return res.rows;
+async function getPassengerTravel(name) {
+
+    const passengerTravel = [];
+    let query =`
+    SELECT passengers."firstName" || ' ' || passengers."lastName" AS passenger,
+    COUNT (travels."passengerId") AS travels
+    FROM travels
+    JOIN passengers ON travels."passengerId" = passengers.id 
+    `
+    const conditional = [];
+    if(typeof name !== 'undefined' && name !== '') {
+        passengerTravel.push("%" + name + "%");
+        conditional.push(`WHERE passengers."firstName" ILIKE $${passengerTravel.length} OR passengers."lastName" ILIKE $${passengerTravel.length}`);
+    }
+    query += conditional.join(" ");
+
+query += `
+    GROUP BY passengers."firstName", passengers."lastName"
+    ORDER BY travels DESC`;
+    const res = await db.query(query, passengerTravel);
+    return res;
 }
 
 const passengersRepository = {
